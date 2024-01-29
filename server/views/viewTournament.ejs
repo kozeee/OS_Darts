@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Cards</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row" id="tournamentCards">
+            <button class = "submit"> Edit </button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        let apiResponse = <%- JSON.stringify(tournament)%>
+
+// Create a function to generate the HTML for the tournament card
+function createTournamentCard(tournament) {
+    const winnersTableHTML = `
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tournament.Winners.map(winner => `
+                    <tr>
+                        <td>${winner.Name}</td>
+                        <td>${winner.Points}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+    return `
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">${tournament.Name}</h5>
+                    <p class="card-text"><strong>Mode:</strong> ${tournament.Mode}</p>
+                    <p class="card-text"><strong>Bar:</strong> ${tournament.Bar}</p>
+                    <p id="winnerTable" class="card-text"><strong>Winners:${winnersTableHTML}</p>
+                </div>
+                <div class ="card-footer text-center"><p class="card-text"><strong>Date: </strong> ${tournament.Date}</p></div>
+            </div>
+        </div>
+    `;
+}
+
+// Use jQuery to append the tournament card to the container
+$(document).ready(function () {
+    const tournamentContainer = $("#tournamentCards");
+    tournamentContainer.append(createTournamentCard(apiResponse));
+});
+    </script>
+</body>
+
+</html>
