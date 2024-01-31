@@ -29,6 +29,7 @@ const PlayerTable = () => {
         <TableHead>
           <TableHeadCell>Player</TableHeadCell>
           <TableHeadCell>Member</TableHeadCell>
+          <TableHeadCell>Total</TableHeadCell>
           <BarList></BarList>
         </TableHead>
         <TableBody>

@@ -19,7 +19,7 @@ const allPoints = async (req, res) => {
     let playerList = await playerDB.find({}, { __v: 0 });
     for (i in playerList) {
       let name = playerList[i].FullName;
-      report[name] = { Member: playerList[i].Membership };
+      report[name] = { Member: playerList[i].Membership, Total: 0 };
       for (x in bars) {
         report[name][bars[x]] = 0;
       }
@@ -32,13 +32,16 @@ const allPoints = async (req, res) => {
       for (x in winners) {
         let winName = winners[x].Name;
         report[winName][barName] += winners[x].Points;
+        report[winName]["Total"] += winners[x].Points;
       }
     }
     for (player in report) {
       report[player].Name = player;
       reportList.push(report[player]);
     }
-    console.log(reportList);
+    reportList.sort((a, b) => {
+      return b.Total - a.Total;
+    });
     res.send(reportList);
   } catch (e) {
     // handle any error

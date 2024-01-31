@@ -7,6 +7,7 @@ const PlayerRow = (props) => {
     <TableRow>
       <TableCell>{player.Name}</TableCell>
       <TableCell>{player.Member.toString()}</TableCell>
+      <TableCell>{player.Total}</TableCell>
       <TableCell>{player["rock falls"]}</TableCell>
       <TableCell>{player["murphy's law"]}</TableCell>
     </TableRow>
