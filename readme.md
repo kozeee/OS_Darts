@@ -15,10 +15,10 @@ Each tournament should have a Name, GameMode, Location, and an array of "Winners
 
 - View all tournaments
 - Search/filter tournaments by Name, Location, and GameMode
+- Implement Winners
 
 #### TODO:
 
-- Implement Winners
 - Create tournaments
 
 ### Players:
@@ -30,12 +30,11 @@ The player object its self is pretty simple and should only really need a name a
 - Implement Membership
 - Create new player modal
 - Player home page
+- Build total points report
 
 #### TODO:
 
-- Implement Winners
 - Build Tournament->Player report
-- Build total points report
 
 ### Bars:
 
