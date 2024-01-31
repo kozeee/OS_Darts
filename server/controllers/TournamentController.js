@@ -9,13 +9,13 @@ const create = async (req, res) => {
     let barInput = req.body.Bar.toLowerCase();
     let modeInput = req.body.Mode.toLowerCase();
     let date = req.body.Date;
-    let participants = req.body.Participants;
+    let winners = req.body.Winners;
     await tournamentDB.create({
       Name: nameInput,
       Date: date,
       Bar: barInput,
       Mode: modeInput,
-      Participants: null,
+      Winners: winners,
     });
     res.sendStatus(200);
   } catch (e) {
@@ -27,31 +27,22 @@ const create = async (req, res) => {
 const searchBy = async (req, res) => {
   try {
     let conditionCount = req.body.conditionCount;
-    if (conditionCount < 1 || conditionCount == null) {
-      let tournamentList = await tournamentDB.find({}, { __v: 0 });
-      let returnList = [];
-      for (let tournament of tournamentList) {
-        returnList.push(tournament);
+    let query = {};
+    if (conditionCount >= 1) {
+      let andQuery = [];
+      if (req.body.query.Name !== "") {
+        andQuery.push({ Name: req.body.query.Name });
       }
-      res.send(returnList);
-    } else {
-      let query = req.body.query;
-      if (query.Name === "") {
-        delete query["Name"];
+      if (req.body.query.Bar !== "") {
+        andQuery.push({ Bar: req.body.query.Bar });
       }
-      if (query.Bar === "") {
-        delete query["Bar"];
+      if (req.body.query.Mode !== "") {
+        andQuery.push({ Mode: req.body.query.Mode });
       }
-      if (query.Mode === "") {
-        delete query["Mode"];
-      }
-      let tournamentList = await tournamentDB.find(query, { __v: 0 });
-      let returnList = [];
-      for (let tournament of tournamentList) {
-        returnList.push(tournament);
-      }
-      res.send(returnList);
+      query = { $and: andQuery };
     }
+    let tournamentList = await tournamentDB.find(query, { __v: 0 });
+    res.send(tournamentList);
   } catch (e) {
     console.log(e);
     res.redirect(404, "/");
@@ -131,6 +122,20 @@ const fetchWinners = async (req, res) => {
   }
 };
 
+const searchByPlayer = async (req, res) => {
+  try {
+    let playerName = req.body.playerName;
+    let tournamentList = await tournamentDB.find(
+      { Winners: { $elemMatch: { Name: playerName } } },
+      { __v: 0 }
+    );
+    res.send(tournamentList);
+  } catch (e) {
+    console.log(e);
+    res.redirect(404, "/");
+  }
+};
+
 module.exports = {
   create,
   searchBy,
@@ -139,4 +144,5 @@ module.exports = {
   viewCreate,
   singleTournamentView,
   fetchWinners,
+  searchByPlayer,
 };

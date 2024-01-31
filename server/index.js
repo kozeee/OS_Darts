@@ -8,6 +8,7 @@ const cors = require("cors");
 const playerRoute = require("./routes/Player");
 const barRoute = require("./routes/Bars");
 const tournamentRoute = require("./routes/Tournament");
+const pointsRoute = require("./routes/Points");
 
 // express options
 const app = express();
@@ -22,6 +23,7 @@ app.set("trust proxy", 1);
 app.use("/api/Player", playerRoute);
 app.use("/api/Bar", barRoute);
 app.use("/api/Tournament", tournamentRoute);
+app.use("/api/Points", pointsRoute);
 
 // serve index
 app.get("/", (req, res) => {

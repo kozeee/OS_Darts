@@ -8,15 +8,17 @@ import {
 } from "flowbite-react";
 import { useEffect, useState } from "react";
 import Players from "./Players";
+import BarList from "./BarList";
 
 const PlayerTable = () => {
   const [items, setItems] = useState([]);
+  const [bars, setBars] = useState([]);
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = () => {
-    fetch("/api/player/all")
+    fetch("/api/points/all")
       .then((response) => response.json())
       .then((resJson) => setItems(resJson));
   };
@@ -26,7 +28,8 @@ const PlayerTable = () => {
       <Table striped>
         <TableHead>
           <TableHeadCell>Player</TableHeadCell>
-          <TableHeadCell>Membership</TableHeadCell>
+          <TableHeadCell>Member</TableHeadCell>
+          <BarList></BarList>
         </TableHead>
         <TableBody>
           <Players items={items}></Players>

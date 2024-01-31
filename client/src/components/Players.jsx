@@ -1,15 +1,8 @@
 import PlayerRow from "./PlayerRow";
 
 const Players = ({ items }) => {
-  console.log(items);
-  return items.map(({ FullName, Membership }) => {
-    return (
-      <PlayerRow
-        key={FullName}
-        Name={FullName}
-        Membership={Membership.toString()}
-      />
-    );
+  return items.map((player) => {
+    return <PlayerRow player={player} key={player.Name} />;
   });
 };
 
