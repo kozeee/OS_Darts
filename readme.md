@@ -1,4 +1,4 @@
-# VADarts APP
+# OS_Darts APP
 
 This is intended to be a fullstack application to assist in tracking points across multiple dart tournaments in our local area.
 The code base is currently in migration from Node/Express/Mongodb to include a REACT front-end instead of pure JS/boostrap.
