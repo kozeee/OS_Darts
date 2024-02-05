@@ -12,7 +12,7 @@ export default function BarSelect() {
   function getBars() {
     return items.map((item, i) => {
       return (
-        <option key={i} value={item.name}>
+        <option key={item.Name} value={item.name}>
           {item.Name}
         </option>
       );

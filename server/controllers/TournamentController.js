@@ -6,10 +6,26 @@ const tournamentDB = require("../models/Tournament");
 const create = async (req, res) => {
   try {
     let nameInput = req.body.Name.toLowerCase();
+    delete req.body.Name;
     let barInput = req.body.Bar.toLowerCase();
+    delete req.body.Bar;
     let modeInput = req.body.Mode.toLowerCase();
+    delete req.body.Mode;
     let date = req.body.Date;
-    let winners = req.body.Winners;
+    delete req.body.Date;
+    let participants = parseInt(req.body.Participants);
+    delete req.body.Participants;
+    let winners = [];
+    for (i in req.body) {
+      i = parseInt(i);
+      if (i === 1) {
+      } else if (i === 2) {
+        participants = participants / 2;
+      } else if (i % 2 > 0) participants = participants / 2;
+      points = parseFloat(participants).toFixed(2);
+      winners.push({ Name: req.body[i], Points: points });
+    }
+
     await tournamentDB.create({
       Name: nameInput,
       Date: date,

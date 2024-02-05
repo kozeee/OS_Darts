@@ -1,10 +1,9 @@
 import ResultCard from "./resultCard";
 
 const SearchResults = ({ items }) => {
-  console.log(items);
-  return items.map(({ Name, Mode, Bar, id, Date }) => {
+  return items.map(({ Name, Mode, Bar, _id, Date }) => {
     return (
-      <ResultCard key={id} Name={Name} Mode={Mode} Bar={Bar} Date={Date} />
+      <ResultCard key={_id} Name={Name} Mode={Mode} Bar={Bar} Date={Date} />
     );
   });
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Select, TextInput } from "flowbite-react";
 import BarSelect from "./barSelect";
 import SearchResults from "./SearchResults";
+import TournamentModal from "./tournamentModal";
 
 export default function Search() {
   const [items, setItems] = useState([]);
@@ -45,6 +46,7 @@ export default function Search() {
   return (
     <div>
       <div className="flex justify-center">
+        <TournamentModal></TournamentModal>
         <form
           onSubmit={submitForm}
           className="flex max-w-lg flex-row gap-4 mt-2"
