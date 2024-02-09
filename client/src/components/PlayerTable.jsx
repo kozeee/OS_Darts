@@ -7,20 +7,20 @@ import {
   TableRow,
 } from "flowbite-react";
 import { useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
 import Players from "./Players";
 import BarList from "./BarList";
 
 const PlayerTable = () => {
-  const [items, setItems] = useState([]);
-  const [bars, setBars] = useState([]);
+  const [report, setReport] = useState([]);
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = () => {
-    fetch("/api/points/all")
+    fetch("/api/points/allReport")
       .then((response) => response.json())
-      .then((resJson) => setItems(resJson));
+      .then((data) => setReport(data));
   };
 
   return (
@@ -33,7 +33,7 @@ const PlayerTable = () => {
           <BarList></BarList>
         </TableHead>
         <TableBody>
-          <Players items={items}></Players>
+          <Players items={report}></Players>
         </TableBody>
       </Table>
     </div>

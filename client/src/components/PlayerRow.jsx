@@ -1,15 +1,17 @@
 import { TableRow, TableCell } from "flowbite-react";
 
+const Unroll = (player) => {
+  const playerItem = Object.values(player.player);
+  console.log(playerItem);
+  return playerItem.map((item) => <TableCell>{item.toString()}</TableCell>);
+};
+
 const PlayerRow = (props) => {
-  let player = props.player;
-  console.log(player);
+  console.log(props);
   return (
     <TableRow>
-      <TableCell>{player.Name}</TableCell>
-      <TableCell>{player.Member.toString()}</TableCell>
-      <TableCell>{player.Total}</TableCell>
-      <TableCell>{player["rock falls"]}</TableCell>
-      <TableCell>{player["murphy's law"]}</TableCell>
+      <TableCell>{props.Name}</TableCell>
+      <Unroll player={props.player}></Unroll>
     </TableRow>
   );
 };
