@@ -4,6 +4,7 @@ import Header from "./components/header";
 import Home from "./pages/Home";
 import SearchPage from "./pages/SearchPage";
 import PlayersPage from "./pages/PlayersPage";
+import BarsPage from "./pages/BarsPage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,6 +19,7 @@ function App() {
             <Route path="/home" element={<Home />}></Route>
             <Route path="/tournaments" element={<SearchPage />}></Route>
             <Route path="/players" element={<PlayersPage />}></Route>
+            <Route path="/bars" element={<BarsPage />}></Route>
           </Routes>
         </BrowserRouter>
       </div>

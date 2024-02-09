@@ -13,6 +13,9 @@ export default function Header() {
         <Navbar.Link href="/players" className="text-white">
           Players
         </Navbar.Link>
+        <Navbar.Link href="/bars" className="text-white">
+          Bars
+        </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );
