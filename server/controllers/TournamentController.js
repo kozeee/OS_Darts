@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 mongoose.connect("mongodb://127.0.0.1:27017/VADarts");
 const tournamentDB = require("../models/Tournament");
 
+// dont look at this it causes me physical pain
 const create = async (req, res) => {
   try {
     let nameInput = req.body.Name.toLowerCase();
@@ -16,16 +17,16 @@ const create = async (req, res) => {
     let participants = parseInt(req.body.Participants);
     delete req.body.Participants;
     let winners = [];
-    for (i in req.body) {
-      i = parseInt(i);
-      if (i === 1) {
-      } else if (i === 2) {
-        participants = participants / 2;
-      } else if (i % 2 > 0) participants = participants / 2;
-      points = parseFloat(participants).toFixed(2);
-      winners.push({ Name: req.body[i], Points: points });
+    let playerArray = Object.keys(req.body);
+    let winnerLen = playerArray.length / 2;
+    let i = 0;
+    while (i < winnerLen) {
+      let player = req.body["w" + i];
+      let pos = req.body["p" + i];
+      let points = participants / parseInt(pos);
+      winners.push({ Name: player, Points: points });
+      i++;
     }
-
     await tournamentDB.create({
       Name: nameInput,
       Date: date,

@@ -51,7 +51,22 @@ const exists = async (name) => {
   }
 };
 
+const modifyMembership = async (req, res) => {
+  try {
+    let name = req.body.Name.toLowerCase();
+    const player = await playerDB.findOne({ FullName: name });
+    if (player === null) res.sendStatus(404);
+    console.log(player.Membership);
+    player.Membership = !player.Membership;
+    await player.save();
+    res.sendStatus(200);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 module.exports = {
   signUp,
   getAll,
+  modifyMembership,
 };
