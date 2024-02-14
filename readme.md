@@ -16,10 +16,12 @@ Each tournament should have a Name, GameMode, Location, and an array of "Winners
 - View all tournaments
 - Search/filter tournaments by Name, Location, and GameMode
 - Implement Winners
+- Create tournaments
+- Points calculation
 
 #### TODO:
+- Add functionality to edit/delete tournaments
 
-- Create tournaments
 
 ### Players:
 
@@ -31,10 +33,12 @@ The player object its self is pretty simple and should only really need a name a
 - Create new player modal
 - Player home page
 - Build total points report
+- Build Tournament->Player report
+- Toggle membership option
 
 #### TODO:
+- Add funcitonality to edit/delete players
 
-- Build Tournament->Player report
 
 ### Bars:
 
@@ -46,5 +50,4 @@ Bars are just "Locations" more broadly and just denote where a tournament was he
 - Component to fetch bars
 
 #### TODO:
-
-- Add UI to manage bars (create/delete bar)
+- Add UI to delete bars
