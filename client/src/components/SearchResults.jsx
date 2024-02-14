@@ -1,9 +1,16 @@
 import ResultCard from "./resultCard";
 
 const SearchResults = ({ items }) => {
-  return items.map(({ Name, Mode, Bar, _id, Date }) => {
+  return items.map(({ Name, Mode, Bar, _id, Date, Winners }) => {
     return (
-      <ResultCard key={_id} Name={Name} Mode={Mode} Bar={Bar} Date={Date} />
+      <ResultCard
+        key={_id}
+        Name={Name}
+        Mode={Mode}
+        Bar={Bar}
+        Date={Date}
+        Winners={Winners}
+      />
     );
   });
 };
