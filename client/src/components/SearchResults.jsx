@@ -5,6 +5,7 @@ const SearchResults = ({ items }) => {
     return (
       <ResultCard
         key={_id}
+        ID={_id}
         Name={Name}
         Mode={Mode}
         Bar={Bar}

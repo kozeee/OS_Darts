@@ -66,10 +66,25 @@ const searchBy = async (req, res) => {
   }
 };
 
-const displayID = async (req, res) => {
+const fetchTournament = async (req, res) => {
   try {
     let tournamentID = req.params.id;
     let tournament = await tournamentDB.findById(tournamentID);
+    res.send(tournament);
+  } catch (e) {
+    console.log(e);
+    res.redirect(404, "/");
+  }
+};
+
+const deleteTournament = async (req, res) => {
+  try {
+    let tournamentID = req.params.id;
+    if (typeof tournamentID != "string") {
+      res.send(403, "/");
+      return;
+    }
+    let tournament = await tournamentDB.findByIdAndRemove(tournamentID);
     res.send(tournament);
   } catch (e) {
     console.log(e);
@@ -156,10 +171,11 @@ const searchByPlayer = async (req, res) => {
 module.exports = {
   create,
   searchBy,
-  displayID,
+  fetchTournament,
   viewTournaments,
   viewCreate,
   singleTournamentView,
   fetchWinners,
   searchByPlayer,
+  deleteTournament,
 };

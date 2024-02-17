@@ -1,28 +1,35 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Route, createBrowserRouter, RouterProvider } from "react-router-dom";
 import Header from "./components/header";
 import Home from "./pages/Home";
 import SearchPage from "./pages/SearchPage";
 import PlayersPage from "./pages/PlayersPage";
 import BarsPage from "./pages/BarsPage";
+import Lost from "./pages/Lost";
+import Tournament from "./pages/Tournament";
+import { tournamentLoader } from "./pages/Tournament";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home />,
+      errorElement: <Lost />,
+    },
+    { path: "tournaments", element: <SearchPage /> },
+    {
+      path: "tournaments/:id",
+      element: <Tournament />,
+      loader: tournamentLoader,
+    },
+    { path: "players", element: <PlayersPage /> },
+    { path: "bars", element: <BarsPage /> },
+  ]);
 
   return (
     <>
-      <div>
-        <Header />
-        <BrowserRouter>
-          <Routes>
-            <Route index element={<Home />}></Route>
-            <Route path="/home" element={<Home />}></Route>
-            <Route path="/tournaments" element={<SearchPage />}></Route>
-            <Route path="/players" element={<PlayersPage />}></Route>
-            <Route path="/bars" element={<BarsPage />}></Route>
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <Header />
+      <RouterProvider router={router}></RouterProvider>
     </>
   );
 }

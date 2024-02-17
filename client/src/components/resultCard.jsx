@@ -8,7 +8,10 @@ const ResultCard = (props) => {
   }
   return (
     <div className="my-2 w-1/4 bg-white p-4 mx-2">
-      <a href="/" className="mb-3 text-lg text-black underline">
+      <a
+        href={"/tournaments/" + props.ID}
+        className="mb-3 text-lg text-black underline"
+      >
         {props.Name}
       </a>
       <p>Bar: {props.Bar}</p>
