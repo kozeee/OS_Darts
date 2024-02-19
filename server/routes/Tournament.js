@@ -17,5 +17,6 @@ router.post("/view/:id", controller.fetchTournament);
 router.post("/delete/:id", controller.deleteTournament);
 
 router.get("/winners/:id", controller.fetchWinners);
+router.post("/edit/:id", controller.editWinners);
 
 module.exports = router;

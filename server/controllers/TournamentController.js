@@ -168,6 +168,30 @@ const searchByPlayer = async (req, res) => {
   }
 };
 
+const editWinners = async (req, res) => {
+  try {
+    let tournamentID = req.body.id;
+    let tournament = await tournamentDB.findById(tournamentID);
+    delete req.body.id;
+    let winners = [];
+    let playerArray = Object.keys(req.body);
+    let winnerLen = playerArray.length / 2;
+    let i = 0;
+    while (i < winnerLen) {
+      let player = req.body["f" + i];
+      let pos = req.body["p" + i];
+      winners.push({ Name: player, Points: pos });
+      i++;
+    }
+    tournament.Winners = winners;
+    await tournament.save();
+    res.sendStatus(200);
+  } catch (e) {
+    console.log(e);
+    res.redirect(404, "/");
+  }
+};
+
 module.exports = {
   create,
   searchBy,
@@ -178,4 +202,5 @@ module.exports = {
   fetchWinners,
   searchByPlayer,
   deleteTournament,
+  editWinners,
 };
