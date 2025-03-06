@@ -79,7 +79,12 @@ function UnrollWinners(winners) {
         </option>
         <PlayerSelect></PlayerSelect>
       </Select>
-      <input type="number" name={"p" + i} defaultValue={item.Points}></input>
+      <input
+        type="number"
+        step="0.01"
+        name={"p" + i}
+        defaultValue={item.Points}
+      ></input>
       <Button
         color="failure"
         onClick={() => {

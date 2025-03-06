@@ -91,7 +91,7 @@ function TournamentModal() {
               </div>
 
               <Button type="Submit" className="bg-green-500">
-                <a href="/tournaments">Submit</a>
+                Submit
               </Button>
             </form>
           </div>
