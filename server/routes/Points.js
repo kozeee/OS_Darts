@@ -6,5 +6,6 @@ const controller = require("../controllers/PointsController");
 router.get("/all", controller.allPoints);
 router.get("/allReport", controller.allPointsReport);
 router.get("/csvPoints", controller.csvPoints);
+router.post("/dateRange", controller.dateRange);
 
 module.exports = router;

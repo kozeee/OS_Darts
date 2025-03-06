@@ -1,6 +1,6 @@
 const { json } = require("body-parser");
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/VADarts");
+mongoose.connect("mongodb://0.0.0.0:27017/VADarts");
 const tournamentDB = require("../models/Tournament");
 
 // dont look at this it causes me physical pain
@@ -14,7 +14,7 @@ const create = async (req, res) => {
     delete req.body.Mode;
     let date = req.body.Date;
     delete req.body.Date;
-    let participants = parseInt(req.body.Participants);
+    let participants = Number(req.body.Participants);
     delete req.body.Participants;
     let winners = [];
     let playerArray = Object.keys(req.body);
@@ -23,7 +23,7 @@ const create = async (req, res) => {
     while (i < winnerLen) {
       let player = req.body["w" + i];
       let pos = req.body["p" + i];
-      let points = participants / parseInt(pos);
+      let points = participants / Number(pos);
       winners.push({ Name: player, Points: points });
       i++;
     }
