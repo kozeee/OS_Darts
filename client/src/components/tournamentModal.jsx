@@ -5,6 +5,8 @@ import {
   Checkbox,
   Label,
   Select,
+  Alert,
+  Badge,
 } from "flowbite-react";
 import { useEffect, useState } from "react";
 import BarSelect from "./barSelect";
@@ -13,91 +15,225 @@ import { Form } from "react-router-dom";
 
 function TournamentModal() {
   const [openModal, setOpenModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState("");
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+    setShowSuccess(false);
 
     const formData = new FormData(e.target);
     const payload = Object.fromEntries(formData);
-    console.log(JSON.stringify(payload));
 
     if (payload.Name === "") {
-      return console.log("No name added");
-    } else {
-      fetch("/api/tournament/create", {
+      setError("Please enter a tournament name");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (payload.Participants === "" || isNaN(payload.Participants)) {
+      setError("Please enter a valid number of participants");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/Tournament/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      }).then(setOpenModal(false));
+      });
+
+      if (response.ok) {
+        setShowSuccess(true);
+        e.target.reset();
+        setTimeout(() => {
+          setOpenModal(false);
+          setShowSuccess(false);
+          // Optionally refresh the page or update the UI
+          window.location.reload();
+        }, 1500);
+      } else {
+        setError("Failed to create tournament. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error creating tournament:", error);
+      setError("An error occurred while creating the tournament.");
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setError("");
+    setShowSuccess(false);
   };
 
   return (
     <>
-      <Button className="mx-2 my-2" onClick={() => setOpenModal(true)}>
-        Create New Tournament
-      </Button>
-      <Modal
-        className="flex justify-center"
-        size="max-w-lg"
-        show={openModal}
-        onClose={() => setOpenModal(false)}
+      <Button
+        color="success"
+        size="lg"
+        onClick={() => setOpenModal(true)}
+        className="px-6 py-2"
       >
-        <Modal.Header>Add a new tournament below</Modal.Header>
+        🏆 Create Tournament
+      </Button>
+
+      <Modal show={openModal} onClose={handleCloseModal} size="4xl">
+        <Modal.Header>
+          <div className="flex items-center gap-3">
+            <div className="text-2xl">🏆</div>
+            <span className="text-xl font-bold text-gray-900">
+              Create New Tournament
+            </span>
+          </div>
+        </Modal.Header>
+
         <Modal.Body>
-          <div className="flex justify-center space-y-6">
-            <form
-              onSubmit={submitForm}
-              className="flex max-w-2xl flex-col gap-4 mt-2"
-            >
-              <div className="flex flex-row justify-center justify-con min-w-12 gap-4">
+          <div className="space-y-6">
+            {/* Success Alert */}
+            {showSuccess && (
+              <Alert color="success">
+                <span className="font-medium">✅ Success!</span> Tournament
+                created successfully.
+              </Alert>
+            )}
+
+            {/* Error Alert */}
+            {error && (
+              <Alert color="failure">
+                <span className="font-medium">❌ Error!</span> {error}
+              </Alert>
+            )}
+
+            <form onSubmit={submitForm} className="space-y-6">
+              {/* Basic Tournament Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="name">Tournament Name</Label>
+                  <Label
+                    htmlFor="name"
+                    className="text-lg font-medium text-gray-700 mb-2"
+                  >
+                    Tournament Name
+                  </Label>
                   <TextInput
                     id="name"
                     type="text"
-                    placeholder="Tournament Name"
+                    placeholder="Enter tournament name..."
                     name="Name"
-                  ></TextInput>
-                </div>
-
-                <div className="" id="location" name="Bar">
-                  <Label htmlFor="location">Location</Label>
-                  <BarSelect />
-                </div>
-
-                <div className="">
-                  <Label htmlFor="gameType">Game Type</Label>
-                  <Select name="Mode" id="gameType">
-                    <option value="singles">Singles</option>
-                    <option value="doubles">Doubles</option>
-                  </Select>
+                    required
+                    className="w-full"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Give your tournament a descriptive name.
+                  </p>
                 </div>
 
                 <div>
-                  <Label htmlFor="participants">Participants</Label>
+                  <Label
+                    htmlFor="location"
+                    className="text-lg font-medium text-gray-700 mb-2"
+                  >
+                    🏪 Bar Location
+                  </Label>
+                  <BarSelect />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Select the bar where the tournament will be held.
+                  </p>
+                </div>
+
+                <div>
+                  <Label
+                    htmlFor="gameType"
+                    className="text-lg font-medium text-gray-700 mb-2"
+                  >
+                    🎯 Game Mode
+                  </Label>
+                  <Select name="Mode" id="gameType" className="w-full">
+                    <option value="singles">Singles</option>
+                    <option value="doubles">Doubles</option>
+                  </Select>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Choose between singles or doubles format.
+                  </p>
+                </div>
+
+                <div>
+                  <Label
+                    htmlFor="participants"
+                    className="text-lg font-medium text-gray-700 mb-2"
+                  >
+                    👥 Number of Participants
+                  </Label>
                   <TextInput
                     id="participants"
-                    type="text"
-                    placeholder="#"
+                    type="number"
+                    placeholder="Enter number of players..."
                     name="Participants"
-                  ></TextInput>
+                    required
+                    min="1"
+                    className="w-full"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Total number of players in the tournament.
+                  </p>
                 </div>
               </div>
-              <div>
-                <FormWithPlayerSelects></FormWithPlayerSelects>
+
+              {/* Player Selection Section */}
+              <div className="border-t border-gray-200 pt-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    🏅 Tournament Results
+                  </h3>
+                  <Badge color="info" size="sm">
+                    Required
+                  </Badge>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">
+                  Select the winners and their positions to calculate points.
+                </p>
+                <FormWithPlayerSelects fieldPrefix="w" />
               </div>
 
-              <Button type="Submit" className="bg-green-500">
-                Submit
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                color="success"
+                size="lg"
+                disabled={isSubmitting}
+                className="w-full py-3"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Creating Tournament...
+                  </>
+                ) : (
+                  "🏆 Create Tournament"
+                )}
               </Button>
             </form>
           </div>
         </Modal.Body>
+
         <Modal.Footer>
-          <Button onClick={() => setOpenModal(false)}>Cancel</Button>
+          <div className="flex justify-end gap-3 w-full">
+            <Button
+              color="gray"
+              onClick={handleCloseModal}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
     </>

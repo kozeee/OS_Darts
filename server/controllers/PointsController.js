@@ -173,7 +173,10 @@ const csvPoints = async (req, res) => {
 
 const dateRange = async (req, res) => {
   let { startDate, endDate } = req.body;
-  // Format dates to match your database format (assuming your DB stores dates as DD-MM-YYYY)
+
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
+
   try {
     let report = {};
     let bars = [];
@@ -205,17 +208,45 @@ const dateRange = async (req, res) => {
             {
               $gte: [
                 {
-                  $dateFromString: { dateString: "$Date", format: "%m/%d/%Y" },
+                  $cond: {
+                    if: { $regexMatch: { input: "$Date", regex: "^\\d{4}-" } },
+                    then: {
+                      $dateFromString: {
+                        dateString: "$Date",
+                        format: "%Y-%m-%d",
+                      },
+                    },
+                    else: {
+                      $dateFromString: {
+                        dateString: "$Date",
+                        format: "%m/%d/%Y",
+                      },
+                    },
+                  },
                 },
-                new Date(startDate),
+                startDate,
               ],
             },
             {
               $lte: [
                 {
-                  $dateFromString: { dateString: "$Date", format: "%m/%d/%Y" },
+                  $cond: {
+                    if: { $regexMatch: { input: "$Date", regex: "^\\d{4}-" } },
+                    then: {
+                      $dateFromString: {
+                        dateString: "$Date",
+                        format: "%Y-%m-%d",
+                      },
+                    },
+                    else: {
+                      $dateFromString: {
+                        dateString: "$Date",
+                        format: "%m/%d/%Y",
+                      },
+                    },
+                  },
                 },
-                new Date(endDate),
+                endDate,
               ],
             },
           ],
@@ -223,36 +254,64 @@ const dateRange = async (req, res) => {
       },
       { __v: 0 }
     );
-    for (i in tournamentList) {
-      let barName = tournamentList[i].Bar;
-      let winners = tournamentList[i].Winners;
-      for (x in winners) {
-        let winName = winners[x].Name;
-        report[winName][barName] += winners[x].Points;
-        report[winName]["Total"] += winners[x].Points;
+    if (tournamentList.length === 0) {
+      res.status(400).send("No tournaments found for the given date range");
+      return;
+    } else {
+      console.log(tournamentList);
+      for (i in tournamentList) {
+        let barName = tournamentList[i].Bar;
+        let winners = tournamentList[i].Winners;
+        for (x in winners) {
+          let winName = winners[x].Name;
+
+          // Ensure the player exists in the report object
+          if (!report[winName]) {
+            console.log(
+              `Player ${winName} not found in player list, initializing...`
+            );
+            report[winName] = { Member: "no", Total: 0 };
+            // Initialize all bar fields for this player
+            for (let bar of bars) {
+              report[winName][bar] = 0;
+            }
+          }
+
+          // Ensure the bar exists in the player's record
+          if (!report[winName][barName]) {
+            report[winName][barName] = 0;
+          }
+
+          report[winName][barName] += winners[x].Points;
+          report[winName]["Total"] += winners[x].Points;
+        }
       }
-    }
-    for (player in report) {
-      if (report[player].Total === 0) {
-        delete report[player];
+      for (player in report) {
+        if (report[player].Total === 0) {
+          delete report[player];
+        } else {
+          report[player].Name = player;
+          reportList.push(report[player]);
+        }
+      }
+      if (reportList.length != 0) {
+        reportList.sort((a, b) => {
+          return b.Total - a.Total;
+        });
+
+        const csv = parse(Object.values(report), { fieldList });
+        fs.writeFileSync("data.csv", csv, "utf-8");
+
+        res
+          .set({
+            "Content-Type": "text/csv",
+            "Content-Disposition": `attachment; filename="points.csv"`,
+          })
+          .send(csv);
       } else {
-        report[player].Name = player;
-        reportList.push(report[player]);
+        res.status(400).send("No tournaments found for the given date range");
       }
     }
-    reportList.sort((a, b) => {
-      return b.Total - a.Total;
-    });
-
-    const csv = parse(Object.values(report), { fieldList });
-    fs.writeFileSync("data.csv", csv, "utf-8");
-
-    res
-      .set({
-        "Content-Type": "text/csv",
-        "Content-Disposition": `attachment; filename="points.csv"`,
-      })
-      .send(csv);
   } catch (e) {
     // handle any error
     console.log(e);

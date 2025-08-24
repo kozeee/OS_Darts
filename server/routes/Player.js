@@ -6,5 +6,6 @@ const controller = require("../controllers/PlayerController");
 router.post("/create", controller.signUp);
 router.post("/membership", controller.modifyMembership);
 router.get("/all", controller.getAll);
+router.post("/dateRange", controller.dateRange);
 
 module.exports = router;
