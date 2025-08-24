@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { TableHeadCell } from "flowbite-react";
 
-export default function barList() {
+export default function useBarList() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    fetch("/api/bar/all")
+    fetch("/api/Bar/all")
       .then((response) => response.json())
       .then((resJson) => setItems(resJson));
   }, []);

@@ -1,11 +1,13 @@
 import PlayerRow from "./PlayerRow";
 
-const Players = ({ items }) => {
-  const playerNames = Object.keys(items);
-  let playerMap = Object.values(items);
-  return playerMap.map((item, i) => {
+const Players = ({ items, barNames }) => {
+  if (!Array.isArray(items)) {
+    return null;
+  }
+  
+  return items.map((item, i) => {
     return (
-      <PlayerRow key={playerNames[i]} player={item} Name={playerNames[i]} />
+      <PlayerRow key={i} player={item} Name={item.Name} barNames={barNames} />
     );
   });
 };

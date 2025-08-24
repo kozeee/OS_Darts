@@ -18,5 +18,8 @@ router.post("/delete/:id", controller.deleteTournament);
 
 router.get("/winners/:id", controller.fetchWinners);
 router.post("/edit/:id", controller.editWinners);
+router.post("/editDate", controller.editDate);
+router.post("/removePlayer", controller.removePlayer);
+router.post("/addPlayer", controller.addPlayer);
 
 module.exports = router;

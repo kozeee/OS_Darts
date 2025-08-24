@@ -23,6 +23,10 @@ const tournamentSchema = new mongoose.Schema({
   Winners: {
     type: [
       {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Players'
+        },
         Name: String,
         Points: Number,
       },
